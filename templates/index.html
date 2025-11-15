@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sentiment & Sarcasm Analyzer</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <div class="container">
+    <h1>💬 Sentiment & Sarcasm Analyzer</h1>
+
+    <div class="section">
+      <h2>Analyze a Single Comment</h2>
+      <textarea id="textInput" placeholder="Type your text here..."></textarea>
+      <button id="analyzeBtn">Analyze</button>
+      <div id="result"></div>
+    </div>
+
+    <div class="section">
+      <h2>Upload a CSV File</h2>
+      <input type="file" id="fileInput" accept=".csv">
+      <button id="uploadBtn">Upload</button>
+      <div id="csvResult"></div>
+    </div>
+
+    <div class="output" id="summary"></div>
+    <div class="output">
+      <img id="wordcloud" alt="Word Cloud" />
+    </div>
+  </div>
+
+  <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
