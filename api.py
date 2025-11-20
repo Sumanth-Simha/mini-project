@@ -9,7 +9,6 @@ from flask_cors import CORS
 from transformers import BartTokenizer, BartForConditionalGeneration
 from collections import Counter
 from wordcloud import WordCloud
-import requests
 import google.generativeai as genai
 
 # -------------------------------------
@@ -21,7 +20,7 @@ CORS(app)
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 # -------------------------------------
-# 🔑 Gemini API Key (ENV VARIABLE)
+# 🔑 Gemini API Key
 # -------------------------------------
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 
@@ -32,32 +31,15 @@ genai.configure(api_key=GEMINI_API_KEY)
 GEMINI_MODEL = "gemini-2.5-flash"
 
 # -------------------------------------
-# 🧠 Summarizer Model (Auto Download)
+# 🧠 Summarizer Model (Recommended Fix)
 # -------------------------------------
-MODEL_DIR = os.path.join(BASE_DIR, "models", "bart-summarizer")
-MODEL_BIN = os.path.join(MODEL_DIR, "pytorch_model.bin")
+print("📂 Loading BART summarizer from HuggingFace...")
 
-# ⚠ Replace with YOUR HuggingFace model link
-MODEL_URL = "https://huggingface.co/<your-username>/<your-model>/resolve/main/pytorch_model.bin"
+MODEL_NAME = "facebook/bart-large-cnn"   # ✔ public + works everywhere
 
-def download_bart_model():
-    """Downloads BART model if not present."""
-    if not os.path.exists(MODEL_DIR):
-        os.makedirs(MODEL_DIR)
-
-    if not os.path.exists(MODEL_BIN):
-        print("⬇ Downloading BART model...")
-        r = requests.get(MODEL_URL)
-        open(MODEL_BIN, "wb").write(r.content)
-        print("✅ BART model downloaded successfully.")
-
-download_bart_model()
-
-# Load model
 try:
-    print("📂 Loading BART summarizer...")
-    tokenizer = BartTokenizer.from_pretrained(MODEL_DIR)
-    summarizer_model = BartForConditionalGeneration.from_pretrained(MODEL_DIR)
+    tokenizer = BartTokenizer.from_pretrained(MODEL_NAME)
+    summarizer_model = BartForConditionalGeneration.from_pretrained(MODEL_NAME)
     summarizer_model.to("cpu")
     summarizer_loaded = True
     print("✅ Summarizer loaded.")
@@ -110,7 +92,6 @@ def analyze_with_gemini(text: str):
 # ☁ Wordcloud
 # -------------------------------------
 def create_wordcloud(texts):
-    """Generates base64 encoded wordcloud."""
     try:
         combined = " ".join(texts)
         wc = WordCloud(width=800, height=400, background_color="white").generate(combined)
