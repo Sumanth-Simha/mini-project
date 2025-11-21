@@ -1,11 +1,8 @@
-flask
+Flask
 flask-cors
-torch
-transformers
 pandas
-numpy
 matplotlib
 wordcloud
-requests
 google-generativeai
+requests
 gunicorn
